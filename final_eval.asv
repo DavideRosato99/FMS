@@ -7,8 +7,8 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
     
     % ciclo sugli elementi
     for elem=1:n_aste
-        nodo1 = ASTE(elem,2);
-        nodo2 = ASTE(elem,3);
+        nodo1 = ASTE(elem,2)
+        nodo2 = ASTE(elem,3)
         xn1 = NODI(nodo1,2);
         xn2 = NODI(nodo2,2);
         yn1 = NODI(nodo1,3);
@@ -20,18 +20,18 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
         % inizializzazione matrice simbolica
         Keprimo = zeros(6,6);
         % riempimento matrice
-        Keprimo(1,1) = 1/l;
+        Keprimo(1,1) = E*A/l;
         Keprimo(2,2) = 12/(l^3);
         Keprimo(3,3) = 4/l;
         Keprimo(4,4) = Keprimo(1,1);
         Keprimo(5,5) = Keprimo(2,2);
         Keprimo(6,6) = Keprimo(3,3);
         Keprimo(1,4) = -Keprimo(1,1);
-        Keprimo(2,3) = 6/(l^2);
+        Keprimo(2,3) = 6*(E*I)/(l^2);
         Keprimo(2,5) = -Keprimo(2,2);
         Keprimo(2,6) = Keprimo(2,3);
         Keprimo(3,5) = -Keprimo(2,3);
-        Keprimo(3,6) = 2/l;
+        Keprimo(3,6) = 2*(E*I)/l;
         Keprimo(5,6) = -Keprimo(2,3);
         % elementi simmetrici uguali
         for i1 = 1:6
@@ -42,11 +42,11 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
         % coseno e seno sistema di riferimento locale
         ca = dx/l;
         sa = dy/l;
-        T0 = zeros(3,3);
+        T0 = sym(zeros(3,3));
         T0 = [ca -sa 0; sa ca 0; 0 0 1];
-        T = [T0 zeros(3,3); zeros(3,3) T0];
+        T = [T0 sym(zeros(3,3)); sym(zeros(3,3)) T0];
         % trasformazione matrice di rigidezza
-        Feprimo = zeros(6,1);
+        Feprimo = sym(zeros(6,1));
         if size(CD,1) > 0
             py1 = CD(elem,2);
             py2 = CD(elem,3);
@@ -77,14 +77,16 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
             Feprimo(4) = Feprimo(4) + fh;
             Feprimo(6) = Feprimo(6) - fm;
         end
-        dispg = zeros(6,1);
-        displ = zeros(6,1);
+        dispg = sym(zeros(6,1));
+        displ = sym(zeros(6,1));
         % lettura gradi di libertà
         gdlE(1:6) = [igl(nodo1,1:3) igl(nodo2,1:3)];
+        gdlE
         % ciclo sui gradi di libertà
         for i1=1:6
             % grado di libertà
             jgl = gdlE(i1);
+            jgl
             % test grado di libertà o di vincolo
             if jgl == -1
                 % grado di vincolo
@@ -96,8 +98,12 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
                 dispg(i1) = disp_vec(jgl);
             end
         end
+        dispg
+        disp_vec
         % calcolo spostamenti locali
         displ = (T')*dispg;
+        displ
+        Keprimo
         % calcolo forze interne 
         % alle estremità delle travi
         for i1=1:6
@@ -109,6 +115,9 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
                 ai_nod(elem,i1) = ai_nod(elem,i1) + Keprimo(i1,i2)*displ(i2);
             end
         end
+        Keprimo
+        displ
+        ai_nod(1,:)
         % calcolo dei coefficienti delle azioni interne
         % per il plot delle azioni nei grafici N/T/M
         % valori per N(x')

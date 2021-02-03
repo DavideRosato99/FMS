@@ -1,4 +1,5 @@
-function [Ke,Fe] = matrice_finale(elem,NODI,ASTE,CD)
+function [Ke,Fe] = matrice_finaleIPER(elem,NODI,ASTE,CD)
+    A = 1e8;
     nodo1 = ASTE(elem,2);
     nodo2 = ASTE(elem,3);
     xn1 = NODI(nodo1,2);
@@ -10,9 +11,9 @@ function [Ke,Fe] = matrice_finale(elem,NODI,ASTE,CD)
     l = sqrt(dx^2 + dy^2);
     
     % inizializzazione matrice simbolica
-    Keprimo = sym(zeros(6,6));
+    Keprimo = zeros(6,6);
     % riempimento matrice
-    Keprimo(1,1) = 1/l;
+    Keprimo(1,1) = A/l;
     Keprimo(2,2) = 12/(l^3);
     Keprimo(3,3) = 4/l;
     Keprimo(4,4) = Keprimo(1,1);
@@ -68,9 +69,9 @@ function [Ke,Fe] = matrice_finale(elem,NODI,ASTE,CD)
         fh = dtm;
         fm = 2*dtd;
         % aggiornamento per carico termico
-        Feprimo(1) = Feprimo(1) - fh;
+        Feprimo(1) = Feprimo(1) - A*fh;
         Feprimo(3) = Feprimo(3) + fm;
-        Feprimo(4) = Feprimo(4) + fh;
+        Feprimo(4) = Feprimo(4) + A*fh;
         Feprimo(6) = Feprimo(6) - fm;
     end
     Fe = T*Feprimo;

@@ -1,6 +1,7 @@
-function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
+function [azioni_interne] = final_evalIPER(n_aste,CD,ASTE,NODI,igl,disp_vec)
     % inizializzazione matrice di forze interne
     % agli estremi delle aste
+    A = 1e8;
     ai_nod = zeros(n_aste,6);
     
     azioni_interne = zeros(n_aste,3,4);
@@ -20,7 +21,7 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
         % inizializzazione matrice simbolica
         Keprimo = zeros(6,6);
         % riempimento matrice
-        Keprimo(1,1) = 1/l;
+        Keprimo(1,1) = A/l;
         Keprimo(2,2) = 12/(l^3);
         Keprimo(3,3) = 4/l;
         Keprimo(4,4) = Keprimo(1,1);
@@ -72,9 +73,9 @@ function [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec)
             fh = dtm;
             fm = 2*dtd;
             % aggiornamento per carico termico
-            Feprimo(1) = Feprimo(1) - fh;
+            Feprimo(1) = Feprimo(1) - A*fh;
             Feprimo(3) = Feprimo(3) + fm;
-            Feprimo(4) = Feprimo(4) + fh;
+            Feprimo(4) = Feprimo(4) + A*fh;
             Feprimo(6) = Feprimo(6) - fm;
         end
         dispg = zeros(6,1);
