@@ -25,10 +25,9 @@ RT = ...
     4,1
     4,2];
 % REAZIONI MASTER SLAVE
-n_ms = 2;
+n_ms = 0;
 MS = ...
-    [2,3,1
-    2,3,2];
+    [];
 % CARICHI SUI NODI
 n_cc = 2;
 CC = ...
@@ -74,6 +73,7 @@ for i1 = 1:n_nodi
         end
     end
 end
+n_gdl
 igl
 
 %% creazione matrice dei carichi esterni sui nodi
@@ -88,6 +88,7 @@ for i1 = 1:size(CC,1)
     end
 end
 car_con
+
 %% creazione matrice dei carichi distribuiti
 car_dis = zeros(n_aste,2);
 for i1 = 1:size(CD,1)
@@ -99,9 +100,11 @@ car_dis
 
 %% inizializzazione matrice di rigidezza totale
 KstfG = sym(zeros(n_gdl,n_gdl));
+KstfG
 
 %% inizializzazione vettore  carichi globali
 F_extG = sym(zeros(n_gdl,1));
+F_extG
 
 %% copia carichi concentrati ai nodi
 F_extG(1:n_gdl)=car_con(1:n_gdl);
@@ -109,7 +112,7 @@ F_extG
 
 %% matrice forze globale
 for elem = 1:n_aste
-    [Ke,Fe] = matrice_finale(elem,NODI,ASTE,CD);
+    [Ke,Fe] = matrice_finale(elem,NODI,ASTE,CD)
     nodo1 = ASTE(elem,2);
     nodo2 = ASTE(elem,3);
     gdlE(1:6) = [igl(nodo1,1:3) igl(nodo2,1:3)]
@@ -124,12 +127,11 @@ for elem = 1:n_aste
         end
     end
 end
-KstfG
-F_extG
 
 disp_vec = sym(zeros(n_gdl,1));
+KstfG
+F_extG
 disp_vec = KstfG\F_extG;
-disp_vec
 
 %% Ricostruzione degli spostamenti per i diagrammi
 [azioni_interne] = final_eval(n_aste,CD,ASTE,NODI,igl,disp_vec);
