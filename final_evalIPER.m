@@ -77,6 +77,9 @@ function [azioni_interne] = final_evalIPER(n_aste,CD,ASTE,NODI,igl,disp_vec)
             Feprimo(3) = Feprimo(3) + fm;
             Feprimo(4) = Feprimo(4) + A*fh;
             Feprimo(6) = Feprimo(6) - fm;
+        else
+            py1 = 0;
+            py2 = 0;
         end
         dispg = zeros(6,1);
         displ = zeros(6,1);
