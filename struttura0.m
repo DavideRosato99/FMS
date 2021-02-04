@@ -1,4 +1,4 @@
-function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD,VELI,VELT)
+function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD,VELI,VELT,cond)
     % creazione matrice nodale igl
     igl = zeros(n_nodi,3);
     % modifica a causa delle reazioni a terra
@@ -77,7 +77,9 @@ function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n
     end
     
     %% Correzioni vincoli elastici
-    [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
+    if cond == 1
+        [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
+    end
     
     %% Soluzione del sistema
     disp_vec = zeros(n_gdl,1);
