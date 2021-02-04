@@ -48,39 +48,6 @@ function [azioni_interne] = final_evalIPER(n_aste,CD,ASTE,NODI,igl,disp_vec)
         T = [T0 zeros(3,3); zeros(3,3) T0];
         % trasformazione matrice di rigidezza
         Feprimo = zeros(6,1);
-        if size(CD,1) > 0
-            py1 = CD(elem,2);
-            py2 = CD(elem,3);
-            dts = CD(elem,4);
-            dti = CD(elem,5);
-            pp = py1;
-            qq = py2-py1;
-            fv = pp*(l/2);
-            fm = pp*(l^2/12);
-            % coefficienti per carico distribuito
-            Feprimo(2) = fv;
-            Feprimo(3) = fm;
-            Feprimo(5) = fv;
-            Feprimo(6) = -fm;
-            %aggiornamento per carico triangolare
-            Feprimo(2) = Feprimo(2)+(3/20)*qq*l;
-            Feprimo(3) = Feprimo(3)+(1/30)*qq*(l^2);
-            Feprimo(5) = Feprimo(5)+(7/20)*qq*l;
-            Feprimo(6) = Feprimo(6)-(1/20)*qq*(l^2);
-            % coefficienti per carico termico
-            dtm = (dts+dti)/2;
-            dtd = (dts-dti)/2;
-            fh = dtm;
-            fm = 2*dtd;
-            % aggiornamento per carico termico
-            Feprimo(1) = Feprimo(1) - A*fh;
-            Feprimo(3) = Feprimo(3) + fm;
-            Feprimo(4) = Feprimo(4) + A*fh;
-            Feprimo(6) = Feprimo(6) - fm;
-        else
-            py1 = 0;
-            py2 = 0;
-        end
         dispg = zeros(6,1);
         displ = zeros(6,1);
         % lettura gradi di libertà
@@ -122,14 +89,14 @@ function [azioni_interne] = final_evalIPER(n_aste,CD,ASTE,NODI,igl,disp_vec)
         azioni_interne(elem,1,4)=0;
         % valori per T(x')
         azioni_interne(elem,2,1)=ai_nod(elem,2);
-        azioni_interne(elem,2,2)=py1;
-        azioni_interne(elem,2,3)=(py2-py1)/(2*l);
+        azioni_interne(elem,2,2)=0;
+        azioni_interne(elem,2,3)=0;
         azioni_interne(elem,2,4)=0;
         % valori per M(x')
         azioni_interne(elem,3,1)=-ai_nod(elem,3);
         azioni_interne(elem,3,2)=ai_nod(elem,2);
-        azioni_interne(elem,3,3)=py1/2;
-        azioni_interne(elem,3,4)=(py2-py1)/(6*l);
+        azioni_interne(elem,3,3)=0;
+        azioni_interne(elem,3,4)=0;
     end
     
 end

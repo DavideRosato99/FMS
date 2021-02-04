@@ -1,9 +1,9 @@
 function plot_diag(coeff,NODI,ASTE,str)
     d_tratt = 0.05;
     d_val = 0.2;
-    scala = 0.2;
+    scala = 0.1;
     n_aste = size(ASTE,1);
-    NOME = ['N';'M';'T'];
+    NOME = ['N';'T';'M'];
     % ciclo su N,T,M
     for i1 = 1:3
         figure('Name',strcat(str," - ",NOME(i1)));
@@ -23,18 +23,18 @@ function plot_diag(coeff,NODI,ASTE,str)
             % inizializzazione incognita di parametrizzazione x
             x = 0:L/100:L;
             % coefficienti
-            c0 = coeff(i2,i1,1);
-            c1 = coeff(i2,i1,2);
-            c2 = coeff(i2,i1,3);
-            c3 = coeff(i2,i1,4);
+            c0 = round(coeff(i2,i1,1),5);
+            c1 = round(coeff(i2,i1,2),5);
+            c2 = round(coeff(i2,i1,3),5);
+            c3 = round(coeff(i2,i1,4),5);
             % funzioni per il calcolo dei valori agli estremi
             val1 = c0;
             val2 = (c0+c1*L+c2*L^2+c3*L^3);
             % controllo
-            alpha = atan2(sa,ca)
+            alpha = atan2(sa,ca);
             ctr = 1;
             if alpha == 0
-                if ASTE(i2,4) == 1
+                if ASTE(i2,4) == 2
                     ctr = -1;
                 end
             elseif ((alpha <= pi/2) && (alpha > 0)) || ((alpha <= -pi/2) && (alpha > -pi))

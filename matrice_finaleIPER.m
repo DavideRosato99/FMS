@@ -44,35 +44,5 @@ function [Ke,Fe] = matrice_finaleIPER(elem,NODI,ASTE,CD)
     
     % inizializzazione forze distribuite
     Feprimo = zeros(6,1);
-    if size(CD,1) > 0
-        py1 = CD(elem,2);
-        py2 = CD(elem,3);
-        dts = CD(elem,4);
-        dti = CD(elem,5);
-        pp = py1;
-        qq = py2-py1;
-        fv = pp*(l/2);
-        fm = pp*(l^2/12);
-        % coefficienti per carico distribuito
-        Feprimo(2) = fv;
-        Feprimo(3) = fm;
-        Feprimo(5) = fv;
-        Feprimo(6) = -fm;
-        %aggiornamento per carico triangolare
-        Feprimo(2) = Feprimo(2)+(3/20)*qq*l;
-        Feprimo(3) = Feprimo(3)+(1/30)*qq*(l^2);
-        Feprimo(5) = Feprimo(5)+(7/20)*qq*l;
-        Feprimo(6) = Feprimo(6)-(1/20)*qq*(l^2);
-        % coefficienti per carico termico
-        dtm = (dts+dti)/2;
-        dtd = (dts-dti)/2;
-        fh = dtm;
-        fm = 2*dtd;
-        % aggiornamento per carico termico
-        Feprimo(1) = Feprimo(1) - A*fh;
-        Feprimo(3) = Feprimo(3) + fm;
-        Feprimo(4) = Feprimo(4) + A*fh;
-        Feprimo(6) = Feprimo(6) - fm;
-    end
     Fe = T*Feprimo;
 end
