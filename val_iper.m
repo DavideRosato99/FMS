@@ -15,6 +15,7 @@ function [R] = val_iper(coeff0,coeffIPER,coeffCOMPL,n_aste)
             end
         end
     end
+    format rat
     R_vec
     % controllo che tutte le ipotetiche R siano uguali
     valore = R_vec(1);

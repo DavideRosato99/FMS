@@ -5,7 +5,8 @@ format rat;
 
 %..........................................................................
 %% INSERISCI I DATI QUI
-% NODI % devono essere in ordine
+% devono essere in ordine
+% NODI % [nodo,x,y]
 n_nodi = 13;
 NODI = ...
     [1,0,1
@@ -22,6 +23,8 @@ NODI = ...
     12,3,0
     13,3,0];
 % ASTE % devono essere in ordine
+% il tratteggio (destra o sinistra) lo decidi posizionandoti sul nodo1 e
+% "guardando" il nodo2
 n_aste = 8; % [n_asta,nodo1,nodo2,tratteggio(1:destra,2:sinistra)]
 ASTE = ...
     [1,1,2,1
@@ -33,17 +36,18 @@ ASTE = ...
     7,10,12,1
     8,11,13,1];
 % REAZIONI A TERRA
-n_rt = 4;
+n_rt = 4; % [nodo,direzione]
 RT = ...
     [1,1
     1,2
     4,2
     4,3];
 % REAZIONI A TERRA IPERSTATICA
-n_rtIPER = 0;
+n_rtIPER = 0; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
 RTIPER = [];
 % REAZIONI MASTER SLAVE
-n_ms = 11;
+% la numerazione dei master deve essere sempre minore di quella degli slave
+n_ms = 11; % [master,slave,direzione]
 MS = ...
     [3,5,1
     3,5,2
@@ -57,12 +61,12 @@ MS = ...
     12,13,1
     12,13,2];
 % CARICHI SUI NODI
-n_cc = 2;
+n_cc = 2; % [nodo,direzione,valore]
 CC = ...
     [12,2,3
     7,3,-2];
 % CARICHI SUI NODI IPERSTATICA
-n_ccIPER = 2;
+n_ccIPER = 2; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
 CCIPER = ...
     [2,2,-1
     8,2,1];
@@ -77,13 +81,21 @@ CD = ...
    6,0,0,0,0
    7,0,0,0,0
    8,0,0,0,0];
+% VINCOLI ELASTICI A TERRA
+n_velt = 0; % [nodo,direzione,valore]
+VELT = ...
+    [];
+% VINCOLI ELASTICI INTERNI
+n_veli = 0; %[nodo1,nodo2,direzione,valore]
+VELI = ...
+    [];
 %..........................................................................
 
 %% RISOLUZIONE
 format short
-[coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD);
+[coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD,VELI,VELT);
 [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER);
-[coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER);
+[coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER,VELI,VELT);
 [R] = val_iper(coeff0,coeffIPER,coeffCOMPL,n_aste);
 fprintf('Valore iperstatica R: %d\n\n', R);
 
