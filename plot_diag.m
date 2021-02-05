@@ -1,7 +1,9 @@
 function plot_diag(coeff,NODI,ASTE,str)
+    %% Scala per il plot e distanze relative per il plot dei valori
     d_tratt = 0.05;
     d_val = 0.2;
-    scala = 0.1;
+    scala = 0.2;
+    %% programma 
     n_aste = size(ASTE,1);
     NOME = ['N';'T';'M'];
     % ciclo su N,T,M

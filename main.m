@@ -112,9 +112,13 @@ elseif (CCIPER(1,1) == VELI(2)) && (CCIPER(2,1) == VELI(1))
 elseif (RTIPER(1) == VELT(1))
     cond = -1;
 end
+% Soluzione struttura 0
 [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD,VELI,VELT,cond);
+% Soluzione struttura *
 [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER,VELI,VELT,cond);
+% Soluzione struttura completa
 [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER,VELI,VELT,cond);
+% Merge dei coefficienti per il calcolo del valore di R
 [R] = val_iper(coeff0,coeffIPER,coeffCOMPL,n_aste);
 fprintf('Valore iperstatica R: %d\n\n', R);
 
