@@ -1,8 +1,9 @@
 function plot_diag(coeff,NODI,ASTE,str)
     %% Scala per il plot e distanze relative per il plot dei valori
-    d_tratt = 0.05;
+    d_tratt = 0.02;
     d_val = 0.2;
     scala = 0.2;
+    d_linee = 0.01;
     %% programma 
     n_aste = size(ASTE,1);
     NOME = ['N';'T';'M'];
@@ -30,27 +31,13 @@ function plot_diag(coeff,NODI,ASTE,str)
             c2 = round(coeff(i2,i1,3),5);
             c3 = round(coeff(i2,i1,4),5);
             % funzioni per il calcolo dei valori agli estremi
-            val1 = c0;
-            val2 = (c0+c1*L+c2*L^2+c3*L^3);
+            val1 = round(c0,4);
+            val2 = round((c0+c1*L+c2*L^2+c3*L^3),4);
             % controllo
             alpha = atan2(sa,ca);
             ctr = 1;
-            if alpha == 0
-                if ASTE(i2,4) == 2
-                    ctr = -1;
-                end
-            elseif ((alpha <= pi/2) && (alpha > 0)) || ((alpha <= -pi/2) && (alpha > -pi))
-                if ASTE(i2,4) == 2
-                    ctr = -1;
-                end
-            elseif (alpha == pi)
-                if ASTE(i2,4) == 2
-                    ctr = -1;
-                end
-            elseif ((alpha > pi/2) && (alpha < pi)) || ((alpha < 0) && (alpha > -pi/2))
-                if ASTE(i2,4) == 2
-                    ctr = -1;
-                end
+            if ASTE(i2,4) == 2
+                ctr = -1;
             end
             % coefficienti
             c0 = ctr*c0;
@@ -74,11 +61,37 @@ function plot_diag(coeff,NODI,ASTE,str)
                 ty = 'yn1 - d_tratt*ca + x*sa';
                 trattx = eval(tx);
                 tratty = eval(ty);
+                num_poss = round(L/d_linee);
+                for i3 = 1:1:num_poss
+                    p_inx = 'xn1 + i3*d_linee*ca';
+                    p_iny = 'yn1 + i3*d_linee*sa';
+                    p_finx = 'xn1 + scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(sa) + i3*d_linee*ca';
+                    p_finy = 'yn1 - scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(ca) + i3*d_linee*sa';
+                    punto_in_x = eval(p_inx)
+                    punto_in_y = eval(p_iny)
+                    punto_fin_x = eval(p_finx)
+                    punto_fin_y = eval(p_finy)
+                    plot([punto_in_x,punto_fin_x],[punto_in_y,punto_fin_y],'b','LineWidth',0.2);
+                    hold on;
+                end
             elseif ASTE(i2,4) == 2 % tratteggio a sinistra
                 tx = 'xn1 - d_tratt*sa + x*ca';
                 ty = 'yn1 + d_tratt*ca + x*sa';
                 trattx = eval(tx);
                 tratty = eval(ty);
+                num_poss = round(L/d_linee);
+                for i3 = 1:1:num_poss
+                    p_inx = 'xn1 + i3*d_linee*ca';
+                    p_iny = 'yn1 + i3*d_linee*sa';
+                    p_finx = 'xn1 + scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(sa) + i3*d_linee*ca';
+                    p_finy = 'yn1 - scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(ca) + i3*d_linee*sa';
+                    punto_in_x = eval(p_inx)
+                    punto_in_y = eval(p_iny)
+                    punto_fin_x = eval(p_finx)
+                    punto_fin_y = eval(p_finy)
+                    plot([punto_in_x,punto_fin_x],[punto_in_y,punto_fin_y],'b','LineWidth',0.2);
+                    hold on;
+                end
             end
             % plot asta
             plot(astax,astay,'k','LineWidth',2);
@@ -90,7 +103,7 @@ function plot_diag(coeff,NODI,ASTE,str)
             % plot tratteggio
             plot(trattx,tratty,'--','MarkerFaceColor','r','MarkerEdgeColor','r');
             % plot valore
-            plot(valx,valy,'b','LineWidth',1);
+            plot(valx,valy,'b','LineWidth',0.5);
             % posizione dei valori agli estremi
             alpha = atan2(sa,ca);
             alpha1 = -pi/6;
@@ -98,8 +111,8 @@ function plot_diag(coeff,NODI,ASTE,str)
             y_text_val1 = yn1 + d_val*sin(alpha-alpha1);
             x_text_val2 = xn2 + d_val*cos(alpha+pi+alpha1);
             y_text_val2 = yn2 + d_val*sin(alpha+pi+alpha1);
-            text(x_text_val1,y_text_val1,num2str(val1));
-            text(x_text_val2,y_text_val2,num2str(val2));
+            h1 = text(x_text_val1,y_text_val1,num2str(val1));
+            h2 = text(x_text_val2,y_text_val2,num2str(val2));
         end
     end
 end
