@@ -81,6 +81,9 @@ function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n
         [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
     end
     
+    %% Correzioni cedimenti vincolari
+    [KstfG,F_extG] = cedimenti_vincolari(KstfG,F_extG,CED,igl,n_gdl);
+    
     %% Soluzione del sistema
     disp_vec = zeros(n_gdl,1);
     disp_vec = KstfG\F_extG;

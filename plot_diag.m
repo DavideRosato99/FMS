@@ -67,10 +67,10 @@ function plot_diag(coeff,NODI,ASTE,str)
                     p_iny = 'yn1 + i3*d_linee*sa';
                     p_finx = 'xn1 + scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(sa) + i3*d_linee*ca';
                     p_finy = 'yn1 - scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(ca) + i3*d_linee*sa';
-                    punto_in_x = eval(p_inx)
-                    punto_in_y = eval(p_iny)
-                    punto_fin_x = eval(p_finx)
-                    punto_fin_y = eval(p_finy)
+                    punto_in_x = eval(p_inx);
+                    punto_in_y = eval(p_iny);
+                    punto_fin_x = eval(p_finx);
+                    punto_fin_y = eval(p_finy);
                     plot([punto_in_x,punto_fin_x],[punto_in_y,punto_fin_y],'b','LineWidth',0.2);
                     hold on;
                 end
@@ -85,25 +85,25 @@ function plot_diag(coeff,NODI,ASTE,str)
                     p_iny = 'yn1 + i3*d_linee*sa';
                     p_finx = 'xn1 + scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(sa) + i3*d_linee*ca';
                     p_finy = 'yn1 - scala*(c0+c1*(i3*d_linee)+c2*(i3*d_linee).^2+c3*(i3*d_linee).^3)*(ca) + i3*d_linee*sa';
-                    punto_in_x = eval(p_inx)
-                    punto_in_y = eval(p_iny)
-                    punto_fin_x = eval(p_finx)
-                    punto_fin_y = eval(p_finy)
+                    punto_in_x = eval(p_inx);
+                    punto_in_y = eval(p_iny);
+                    punto_fin_x = eval(p_finx);
+                    punto_fin_y = eval(p_finy);
                     plot([punto_in_x,punto_fin_x],[punto_in_y,punto_fin_y],'b','LineWidth',0.2);
                     hold on;
                 end
             end
             % plot asta
-            plot(astax,astay,'k','LineWidth',2);
+            plot(astax,astay,'k','LineWidth',2.5);
             axis equal;
             hold on;
             % plot marker separatori aste
             plot(xn1,yn1,'o','MarkerFaceColor','k','MarkerEdgeColor','k');
             plot(xn2,yn2,'o','MarkerFaceColor','k','MarkerEdgeColor','k');
             % plot tratteggio
-            plot(trattx,tratty,'--','MarkerFaceColor','r','MarkerEdgeColor','r');
+            plot(trattx,tratty,'--','MarkerFaceColor','k','MarkerEdgeColor','k');
             % plot valore
-            plot(valx,valy,'b','LineWidth',0.5);
+            plot(valx,valy,'b','LineWidth',1);
             % posizione dei valori agli estremi
             alpha = atan2(sa,ca);
             alpha1 = -pi/6;
@@ -113,6 +113,8 @@ function plot_diag(coeff,NODI,ASTE,str)
             y_text_val2 = yn2 + d_val*sin(alpha+pi+alpha1);
             h1 = text(x_text_val1,y_text_val1,num2str(val1));
             h2 = text(x_text_val2,y_text_val2,num2str(val2));
+            plot([xn1,valx(1)],[yn1,valy(1)],'b','LineWidth',0.2);
+            plot([xn2,valx(end)],[yn2,valy(end)],'b','LineWidth',0.2);
         end
     end
 end

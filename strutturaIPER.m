@@ -81,6 +81,9 @@ function [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_c
     if cond == 1
         [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
     end
+    
+    %% Correzioni cedimenti vincolari
+    [KstfG,F_extG] = cedimenti_vincolari(KstfG,F_extG,CED,igl,n_gdl);
 
     %% Soluzione del sistema lineare
     disp_vec = sym(zeros(n_gdl,1));
