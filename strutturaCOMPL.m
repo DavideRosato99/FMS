@@ -1,12 +1,26 @@
 function [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER,VELI,VELT,CED)
-    % se l'incognita iperstatica è a terra "anti-declasso" e aggiungo una
+    %% se l'incognita iperstatica è a terra "anti-declasso" e aggiungo una
     % reazione vincolare all'originaria matrice delle reazioni vincolari
     if size(RTIPER,1) ~= 0
         nodo = RTIPER(1,1);
         direzione = RTIPER(1,2);
         RT(end+1,:) = [nodo direzione];
     end
-    % devo togliere la reazione vincolare corrispondente al cedimento
+    %% se l'incognita iperstatica è interna, "anti-declasso" e aggiungo una
+    % reazione vincolare all'originaria matrice master-slave
+    if size(CCIPER,1) ~= 0
+        if size(CCIPER,1) ~= 2
+            error('manca azione e reazione iperstatica interna, ricontrolla matrice CCIPER');
+        end
+        if CCIPER(1,1) > CCIPER(2,1)
+            error('in CCIPER devi mettere prima il nodo più piccolo di numerazione');
+        end
+        if CCIPER(1,2) ~= CCIPER(2,2)
+            error('azione e reazione in CCIPER devono avere la stessa direzione');
+        end
+        MS(end+1,:) = [CCIPER(1,1) CCIPER(2,1) CCIPER(1,2)];
+    end
+    %% devo togliere la reazione vincolare corrispondente al cedimento
     % vincolare
     if size(CED,1) ~= 0
         nodo = CED(1,1);
@@ -17,7 +31,7 @@ function [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n
             end
         end
     end
-    % creazione matrice nodale igl
+    %% creazione matrice nodale igl
     igl = zeros(n_nodi,3);
     % modifica a causa delle reazioni a terra
     for i1 = 1:n_nodi
@@ -74,11 +88,11 @@ function [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n
     F_extG = zeros(n_gdl,1);
 
     %% copia carichi concentrati ai nodi
-    F_extG(1:n_gdl)=car_con(1:n_gdl);
+    F_extG(1:n_gdl) = car_con(1:n_gdl);
 
     %% matrice forze globale
     for elem = 1:n_aste
-        [Ke,Fe] = matrice_finale0(elem,NODI,ASTE,CD);
+        [Ke,Fe] = matrice_finaleCOMPL(elem,NODI,ASTE,CD);
         nodo1 = ASTE(elem,2);
         nodo2 = ASTE(elem,3);
         gdlE(1:6) = [igl(nodo1,1:3) igl(nodo2,1:3)];
@@ -105,7 +119,7 @@ function [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n
     disp_vec = KstfG\F_extG;
 
     %% Ricostruzione degli spostamenti per i diagrammi
-    [coeffCOMPL] = final_eval0(n_aste,CD,ASTE,NODI,igl,disp_vec);
+    [coeffCOMPL] = final_evalCOMPL(n_aste,CD,ASTE,NODI,igl,disp_vec);
     
     %% Correzioni round-errors
     for i1 = 1:n_aste

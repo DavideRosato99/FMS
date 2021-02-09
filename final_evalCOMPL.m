@@ -1,4 +1,4 @@
-function [azioni_interne] = final_eval0(n_aste,CD,ASTE,NODI,igl,disp_vec)
+function [azioni_interne] = final_evalCOMPL(n_aste,CD,ASTE,NODI,igl,disp_vec)
     % inizializzazione matrice di forze interne
     % agli estremi delle aste
     A = 1e8;
@@ -67,6 +67,16 @@ function [azioni_interne] = final_eval0(n_aste,CD,ASTE,NODI,igl,disp_vec)
             Feprimo(3) = Feprimo(3)+(1/30)*qq*(l^2);
             Feprimo(5) = Feprimo(5)+(7/20)*qq*l;
             Feprimo(6) = Feprimo(6)-(1/20)*qq*(l^2);
+            % coefficienti per carico termico
+            dtm = (dts+dti)/2;
+            dtd = (dts-dti)/2;
+            fh = dtm;
+            fm = 2*dtd;
+            % aggiornamento per carico termico
+            Feprimo(1) = Feprimo(1) - A*fh;
+            Feprimo(3) = Feprimo(3) + fm;
+            Feprimo(4) = Feprimo(4) + A*fh;
+            Feprimo(6) = Feprimo(6) - fm;
         else
             py1 = 0;
             py2 = 0;

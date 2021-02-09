@@ -1,4 +1,4 @@
-function [Ke,Fe] = matrice_finale0(elem,NODI,ASTE,CD)
+function [Ke,Fe] = matrice_finaleCOMPL(elem,NODI,ASTE,CD)
     A = 1e8;
     nodo1 = ASTE(elem,2);
     nodo2 = ASTE(elem,3);
@@ -52,7 +52,7 @@ function [Ke,Fe] = matrice_finale0(elem,NODI,ASTE,CD)
         pp = py1;
         qq = py2-py1;
         fv = pp*(l/2);
-        fm = pp*(l^2/12);
+        fm = pp*((l^2)/12);
         % coefficienti per carico distribuito
         Feprimo(2) = fv;
         Feprimo(3) = fm;
@@ -63,6 +63,16 @@ function [Ke,Fe] = matrice_finale0(elem,NODI,ASTE,CD)
         Feprimo(3) = Feprimo(3)+(1/30)*qq*(l^2);
         Feprimo(5) = Feprimo(5)+(7/20)*qq*l;
         Feprimo(6) = Feprimo(6)-(1/20)*qq*(l^2);
+        % coefficienti per carico termico
+        dtm = (dts+dti)/2;
+        dtd = (dts-dti)/2;
+        fh = dtm;
+        fm = 2*dtd;
+        % aggiornamento per carico termico
+        Feprimo(1) = Feprimo(1) - A*fh;
+        Feprimo(3) = Feprimo(3) + fm;
+        Feprimo(4) = Feprimo(4) + A*fh;
+        Feprimo(6) = Feprimo(6) - fm;
     end
     Fe = T*Feprimo;
 end
