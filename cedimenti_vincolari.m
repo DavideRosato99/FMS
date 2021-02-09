@@ -1,9 +1,9 @@
 function [KstfG,F_extG] = cedimenti_vincolari(KstfG,F_extG,CED,igl,n_gdl)
-    n_cedv = size(CED);
+    n_cedv = size(CED,1);
     for i1 = 1:n_cedv
         nodo = CED(i1,1);
         direzione = CED(i1,2);
-        cedimento = CED(i3,3);
+        cedimento = CED(i1,3);
         jgl = igl(nodo,direzione);
         if jgl > 0
             for i2 = 1:n_gdl

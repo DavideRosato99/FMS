@@ -1,4 +1,4 @@
-function [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER,VELI,VELT,cond)
+function [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER,VELI,VELT,CED)
     % creazione matrice nodale igl
     igl = zeros(n_nodi,3);
     % modifica a causa delle reazioni a terra
@@ -78,12 +78,7 @@ function [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_c
     end
     
     %% Correzioni vincoli elastici
-    if cond == 1
-        [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
-    end
-    
-    %% Correzioni cedimenti vincolari
-    [KstfG,F_extG] = cedimenti_vincolari(KstfG,F_extG,CED,igl,n_gdl);
+    [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
 
     %% Soluzione del sistema lineare
     disp_vec = sym(zeros(n_gdl,1));
