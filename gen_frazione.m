@@ -31,7 +31,7 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
     % se non esiste frazione "intera" allora prova con le radici sopra
     % trovate
     if s == false
-        for i1 = 1:1:1000
+        for i1 = 1:1:5000
             for i2 = 1:length(prob_rad)
                 controllo = (val*i1)/sqrt(prob_rad(i2));
                 if (abs(controllo-round(controllo)) < 1e-4) && (s == false)

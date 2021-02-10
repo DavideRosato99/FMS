@@ -6,9 +6,7 @@ function [R] = val_iper(coeff0,coeffIPER,coeffCOMPL,n_aste)
         for i2 = 1:3
             if coeffIPER(i1,i2,1) ~= 0
                 R_ip = round((coeffCOMPL(i1,i2,1) - coeff0(i1,i2,1))/coeffIPER(i1,i2,1),5);
-                if R_ip ~= 0
-                    R_vec = [R_vec;R_ip];
-                end
+                R_vec = [R_vec;R_ip];
             end
         end
     end

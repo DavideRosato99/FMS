@@ -1,5 +1,17 @@
 function [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_ccIPER,CCIPER,n_cc,CC,n_cd,CD,n_rtIPER,RTIPER,VELI,VELT,CED)
-    % creazione matrice nodale igl
+    %% controllo vincoli elastici
+    cond_veli = 0;
+    if size(VELI,1) ~= 0
+        if size(CCIPER,1) ~= 0
+            % se le due incognite iper sono messe in corrispondenza della
+            % molla interna la strutturaIPER non deve prendere in
+            % considerazione la molla
+            if ((CCIPER(1,1) == VELI(1)) && (CCIPER(2,1) == VELI(2))) || ((CCIPER(1,1) == VELI(2)) && (CCIPER(2,1) == VELI(1)))
+                cond_veli = -1;
+            end
+        end
+    end
+    %% creazione matrice nodale igl
     igl = zeros(n_nodi,3);
     % modifica a causa delle reazioni a terra
     for i1 = 1:n_nodi
@@ -78,7 +90,9 @@ function [coeffIPER] = strutturaIPER(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_c
     end
     
     %% Correzioni vincoli elastici
-    [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
+%     if cond_veli == 0
+%         [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
+%     end
 
     %% Soluzione del sistema lineare
     disp_vec = sym(zeros(n_gdl,1));

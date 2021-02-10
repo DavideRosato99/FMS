@@ -31,20 +31,58 @@ function [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n
             end
         end
     end
+    %% controllo vincoli elastici interni
+    if size(VELI,1) ~= 0
+        if size(CCIPER,1) ~= 0
+            % se le due incognite iper sono messe in corrispondenza della
+            % molla interna ho già aggiunto un grado di vincolo interno
+            % alla matrice CD, grado di vincolo che non devo avere se c'è
+            % una molla
+            
+            % controllo che iperstatica sia in corrispondenza di una molla
+            % interna:
+            if ((CCIPER(1,1) == VELI(1)) && (CCIPER(2,1) == VELI(2))) || ((CCIPER(1,1) == VELI(2)) && (CCIPER(2,1) == VELI(1)))
+                cond_veli = -1;
+                % elimino grado di vincolo interno corrispondente
+                for i1 = 1:size(MS,1)
+                    if ((MS(i1,1) == CCIPER(1,1)) && (MS(i1,2) == CCIPER(2,1))) || ((MS(i1,1) == CCIPER(2,1)) && (MS(i1,2) == CCIPER(1,1)))
+                        if MS(i1,3) == CCIPER(1,2)
+                            MS(i1,:) = [0,0,0];
+                        end
+                    end
+                end
+            end
+        end
+    end
+    %% controllo vincoli elastici esterni
+    if size(VELT,1) ~= 0 % se ci sono molle a terra
+        % tolgo reazione vincolare a terra se in corrispondenza c'è la
+        % molla a terra
+        for i1 = 1:size(RT,1)
+            for i2 = 1:size(VELT,1)
+                if (RT(i1,1) == VELT(i2,1)) && (RT(i1,2) == VELT(i2,2))
+                    RT(i1,:) = [0 0];
+                end
+            end
+        end
+    end
     %% creazione matrice nodale igl
     igl = zeros(n_nodi,3);
     % modifica a causa delle reazioni a terra
     for i1 = 1:n_nodi
         for i2 = 1:size(RT,1)
             if RT(i2,1) == i1
-                igl(i1,RT(i2,2)) = -1;
+                if RT(i2,2) ~= 0
+                    igl(i1,RT(i2,2)) = -1;
+                end 
             end
         end
     end
-
     %% modifica a causa delle relazioni master-slave
     for i = 1:size(MS,1)
-        igl(MS(i,2),MS(i,3)) = MS(i,1);
+        if MS(i,1) ~= 0
+            igl(MS(i,2),MS(i,3)) = MS(i,1);
+        end
     end
 
     %% conteggio gradi di libertà

@@ -1,5 +1,17 @@
-function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD,VELI,VELT,CED)
-    % creazione matrice nodale igl
+function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD,VELI,VELT,CED,CCIPER)
+    %% controllo vincoli elastici
+    cond_veli = 0;
+    if size(VELI,1) ~= 0
+        if size(CCIPER,1) ~= 0
+            % se le due incognite iper sono messe in corrispondenza della
+            % molla interna la struttura0 non deve prendere in
+            % considerazione la molla
+            if ((CCIPER(1,1) == VELI(1)) && (CCIPER(2,1) == VELI(2))) || ((CCIPER(1,1) == VELI(2)) && (CCIPER(2,1) == VELI(1)))
+                cond_veli = -1;
+            end
+        end
+    end
+    %% creazione matrice nodale igl
     igl = zeros(n_nodi,3);
     % modifica a causa delle reazioni a terra
     for i1 = 1:n_nodi
@@ -75,10 +87,10 @@ function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n
             end
         end
     end
-    
-    %% Correzioni vincoli elastici
-    [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
-    
+%     %% Correzioni vincoli elastici
+%     if cond_veli == 0
+%         [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
+%     end
     %% Soluzione del sistema
     disp_vec = zeros(n_gdl,1);
     disp_vec = KstfG\F_extG;
