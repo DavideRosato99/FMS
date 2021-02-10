@@ -17,9 +17,9 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
         end
     end
     s = false;
-    for i1 = 1:1:1000
+    for i1 = 1:1:5000
         controllo = val*i1;
-        if (abs(controllo-round(controllo)) < 1e-5) && (s == false)
+        if (abs(controllo-round(controllo)) < 1e-4) && (s == false)
             den = i1;
             num = round(controllo,1);
             rad = 0;
@@ -34,7 +34,7 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
         for i1 = 1:1:1000
             for i2 = 1:length(prob_rad)
                 controllo = (val*i1)/sqrt(prob_rad(i2));
-                if (abs(controllo-round(controllo)) < 1e-5) && (s == false)
+                if (abs(controllo-round(controllo)) < 1e-4) && (s == false)
                     den = i1;
                     num = round(controllo,1);
                     rad = prob_rad(i2);

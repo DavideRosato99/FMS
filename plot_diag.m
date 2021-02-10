@@ -2,8 +2,8 @@ function plot_diag(coeff,NODI,ASTE,str)
     %% Scala per il plot e distanze relative per il plot dei valori
     d_tratt = 0.02;
     d_val = 0.2;
-    scala = 0.1;
-    d_linee = 0.01;
+    scala = 0.2;
+    d_linee = 0.02;
     %% programma 
     n_aste = size(ASTE,1);
     % settaggio della scala 
@@ -73,12 +73,14 @@ function plot_diag(coeff,NODI,ASTE,str)
             ctr = 1;
             if ASTE(i2,4) == 2
                 ctr = -1;
+                val1 = ctr*c0;
+                val2 = ctr*(c0+c1*L+c2*L^2+c3*L^3);
             end
             % coefficienti
-            c0 = ctr*c0;
-            c1 = ctr*c1;
-            c2 = ctr*c2;
-            c3 = ctr*c3;
+            c0 = c0;
+            c1 = c1;
+            c2 = c2;
+            c3 = c3;
             % FUNZIONI PLOTTAGGIO PARAMTERIZZATE CON X
             % funzioni valore
             Fx = 'xn1 + scala_vec(i1,1)*(c0+c1*x+c2*x.^2+c3*x.^3)*(sa) + x*ca';
