@@ -10,44 +10,41 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
         yn2 = NODI(nodo2,3);
         % se l'asta è verticale o orizzontale è inutile il controllo
         if ((xn2-xn1) == 0) || ((yn2-yn1) == 0)
-            break; % uscita dal ciclo
         else
             radice = (xn2-xn1)^2 + (yn2-yn1)^2;
             prob_rad = [prob_rad; radice];
         end
     end
-    s = false;
-    for i1 = 1:1:5000
-        controllo = val*i1;
-        if (abs(controllo-round(controllo)) < 1e-4) && (s == false)
-            den = i1;
-            num = round(controllo,1);
-            rad = 0;
-            cond = 0;
-            s = true;
-            break; % uscita dal ciclo
-        end
-    end
-    % se non esiste frazione "intera" allora prova con le radici sopra
-    % trovate
-    if s == false
-        for i1 = 1:1:5000
-            for i2 = 1:length(prob_rad)
-                controllo = (val*i1)/sqrt(prob_rad(i2));
-                if (abs(controllo-round(controllo)) < 1e-4) && (s == false)
-                    den = i1;
-                    num = round(controllo,1);
-                    rad = prob_rad(i2);
-                    cond = 1;
-                    s = true;
-                    break % uscita dal ciclo
-                end
-                if s == true
-                    break
-                end
+    if val == 0
+        num = 0;
+        den = 1;
+        rad = 0;
+        cond = 0;
+    else
+        % provo con i numeri interi
+        for i1 = 1:300
+            ip_num = val*i1;
+            controllo = abs(ip_num - round(ip_num));
+            if controllo < 1e-4
+                num = round(ip_num);
+                den = i1;
+                rad = 0;
+                cond = 0;
+                return;
             end
-            if s == true
-                break
+        end
+        % provo con le radici
+        for i1 = 1:length(prob_rad)
+            for i2 = 1:100
+                ip_num = val*i2/sqrt(prob_rad(i1));
+                controllo = abs(ip_num - round(ip_num));
+                if controllo < 1e-4
+                    num = round(ip_num);
+                    den = i2;
+                    rad = prob_rad(i1);
+                    cond = 1;
+                    return;
+                end
             end
         end
     end

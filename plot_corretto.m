@@ -6,6 +6,7 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
     xmedio = sum(NODI(:,2))/size(NODI,1);
     ymedio = sum(NODI(:,3))/size(NODI,1);
     
+    %% PLOT ASTE
     for i1 = 1:n_aste
         nodo1 = ASTE(i1,2);
         nodo2 = ASTE(i1,3);
@@ -44,6 +45,7 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
         % plot tratteggio
         plot(trattx,tratty,'k--','LineWidth',1);
     end
+    
     %% PLOT CARICHI CONCENTRATI
     for i1 = 1:size(CC,1)
         double_nod = 0;
@@ -140,6 +142,7 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
                     end
                 end
             end
+            ctr = -1;
             for i5 = 1:size(aste_cc,1)
                 nodo1 = ASTE(aste_cc(i5),2);
                 nodo2 = ASTE(aste_cc(i5),3);
@@ -153,32 +156,46 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
                         if nodo1 == nodi_cc(i5)
                             xn = [xn1;xn2];
                             yn = [yn1;yn2];
+                            ctr = 1;
                         elseif nodo2 == nodi_cc(i5)
                             xn = [xn2;xn1];
                             yn = [yn2;yn1];
+                            ctr = 1;
                         end
                     end
                 end
             end
-            if CC(i1,3) > 0
-                if yn(2) < yn(1)
-                    quiver(xn(1),yn(1)+0.05,0,0.3,'k','LineWidth',1,'MaxHeadSize',5);
-                    str = strcat(num2str(abs(CC(i1,3))),"qb");
-                    text(xn(1)+0.05,yn(1)+0.15,str);
-                elseif xn(2) > xn(1)
-                    quiver(xn(1),yn(1)-0.35,0,0.3,'k','LineWidth',1,'MaxHeadSize',5);
-                    str = strcat(num2str(abs(CC(i1,3))),"qb");
-                    text(xn(1)+0.07,yn(1)-0.35,str);
+            if ctr == 1
+                if CC(i1,3) > 0
+                    if yn(2) < yn(1)
+                        quiver(xn(1),yn(1)+0.05,0,0.3,'k','LineWidth',1,'MaxHeadSize',5);
+                        str = strcat(num2str(abs(CC(i1,3))),"qb");
+                        text(xn(1)+0.05,yn(1)+0.15,str);
+                    elseif xn(2) > xn(1)
+                        quiver(xn(1),yn(1)-0.35,0,0.3,'k','LineWidth',1,'MaxHeadSize',5);
+                        str = strcat(num2str(abs(CC(i1,3))),"qb");
+                        text(xn(1)+0.07,yn(1)-0.35,str);
+                    end
+                else
+                    if yn(2) < yn(1)
+                        quiver(xn(1),yn(1)+0.35,0,-0.3,'k','LineWidth',1,'MaxHeadSize',5);
+                        str = strcat(num2str(abs(CC(i1,3))),"qb");
+                        text(xn(1)+0.05,yn(1)+0.2,str);
+                    elseif xn(2) > xn(1)
+                        quiver(xn(1),yn(1)-0.05,0,-0.3,'k','LineWidth',1,'MaxHeadSize',5);
+                        str = strcat(num2str(abs(CC(i1,3))),"qb");
+                        text(xn(1)+0.05,yn(1)-0.2,str);
+                    end
                 end
             else
-                if yn(2) < yn(1)
-                    quiver(xn(1),yn(1)+0.35,0,-0.3,'k','LineWidth',1,'MaxHeadSize',5);
+                if CC(i1,3) > 0
+                    quiver(NODI(CC(i1,1),2),NODI(CC(i1,1),3)+0.03,0,0.3,'k','LineWidth',1,'MaxHeadSize',5);
                     str = strcat(num2str(abs(CC(i1,3))),"qb");
-                    text(xn(1)+0.05,yn(1)+0.2,str);
-                elseif xn(2) > xn(1)
-                    quiver(xn(1),yn(1)-0.05,0,-0.3,'k','LineWidth',1,'MaxHeadSize',5);
+                    text(NODI(CC(i1,1),2)+0.05,NODI(CC(i1,1),3)+0.15,str);
+                else
+                    quiver(NODI(CC(i1,1),2),NODI(CC(i1,1),3)+0.3,0,-0.3,'k','LineWidth',1,'MaxHeadSize',5);
                     str = strcat(num2str(abs(CC(i1,3))),"qb");
-                    text(xn(1)+0.05,yn(1)-0.2,str);
+                    text(NODI(CC(i1,1),2)+0.05,NODI(CC(i1,1),3)+0.15,str);
                 end
             end
         end
@@ -238,9 +255,10 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
             end
         end
     end
+    
     %% PLOT CARICHI DISTRIBUITI
     for i1 = 1:size(CD,1)
-        %% CARICHI DISTRIBUITI
+        % CARICHI DISTRIBUITI
         if (CD(i1,2) ~= 0) || (CD(i1,3) ~= 0)
             nodo1 = ASTE(CD(i1,1),2);
             nodo2 = ASTE(CD(i1,1),3);
@@ -320,7 +338,7 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
                     end
                 end
             elseif yn2 == yn1 % carico solo verticale
-                par = linspace(0,xn2-xn1,10)
+                par = linspace(0,xn2-xn1,10);
                 if (yn1+yn2)/2 >= ymedio % plotto sopra
                     cdx1 = 'xn1 + par';
                     cdy1 = 'yn1 + 0.05 + par-par';
@@ -392,7 +410,7 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
                 end
             end
         end
-        %% CARICHI TERMICI
+        % CARICHI TERMICI
         if (CD(i1,4) ~= 0) || (CD(i1,5) ~= 0)
             nodo1 = ASTE(CD(i1,1),2);
             nodo2 = ASTE(CD(i1,1),3);
@@ -400,6 +418,87 @@ function plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS)
             xn2 = NODI(nodo2,2);
             yn1 = NODI(nodo1,3);
             yn2 = NODI(nodo2,3);
+            if yn2 - yn1 == 0 % asta orizzontale
+                xmedio_asta = (xn1+xn2)/2;
+                if xn2 > xn1
+                    if (CD(i1,4)) > 0 && (CD(i1,5) < 0)
+                        plot([xmedio_asta-0.06, xmedio_asta+0.06],[yn1+0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1-0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.06, xmedio_asta-0.02],[yn1+0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta+0.06, xmedio_asta+0.02],[yn1+0.04, yn1-0.04],'k','LineWidth',0.5);
+                    elseif (CD(i1,4)) < 0 && (CD(i1,5) > 0)
+                        plot([xmedio_asta-0.06, xmedio_asta+0.06],[yn1-0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1+0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.06, xmedio_asta-0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta+0.06, xmedio_asta+0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                    elseif CD(i1,4) == CD(i1,5)
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1-0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1+0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta-0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta+0.02, xmedio_asta+0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                    end
+                else
+                    if (CD(i1,4)) > 0 && (CD(i1,5) < 0)
+                        plot([xmedio_asta-0.06, xmedio_asta+0.06],[yn1-0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1+0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.06, xmedio_asta-0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta+0.06, xmedio_asta+0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                    elseif (CD(i1,4)) < 0 && (CD(i1,5) > 0)
+                        plot([xmedio_asta-0.06, xmedio_asta+0.06],[yn1+0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1-0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.06, xmedio_asta-0.02],[yn1+0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta+0.06, xmedio_asta+0.02],[yn1+0.04, yn1-0.04],'k','LineWidth',0.5);
+                    elseif CD(i1,4) == CD(i1,5)
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1-0.04, yn1-0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta+0.02],[yn1+0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta-0.02, xmedio_asta-0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                        plot([xmedio_asta+0.02, xmedio_asta+0.02],[yn1-0.04, yn1+0.04],'k','LineWidth',0.5);
+                    end
+                end
+            elseif xn2 - xn1 == 0 % asta verticale
+                ymedio_asta = (yn1+yn2)/2;
+                if yn2 > yn1
+                    if (CD(i1,4)) > 0 && (CD(i1,5) < 0)
+                        plot([xn1-0.04, xn1-0.04],[ymedio_asta-0.06, ymedio_asta+0.06],'k','LineWidth',0.5);
+                        plot([xn1+0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta-0.06, ymedio_asta-0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta+0.06, ymedio_asta+0.02],'k','LineWidth',0.5);
+                    elseif (CD(i1,4)) < 0 && (CD(i1,5) > 0)
+                        plot([xn1-0.04, xn1-0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1+0.04, xn1+0.04],[ymedio_asta-0.06, ymedio_asta+0.06],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta-0.06],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta+0.02, ymedio_asta+0.06],'k','LineWidth',0.5);
+                    elseif CD(i1,4) == CD(i1,5)
+                        plot([xn1-0.04, xn1-0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1+0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta-0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta+0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                    end
+                else
+                    if (CD(i1,4)) > 0 && (CD(i1,5) < 0)
+                        plot([xn1-0.04, xn1-0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1+0.04, xn1+0.04],[ymedio_asta-0.06, ymedio_asta+0.06],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta-0.06],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta+0.02, ymedio_asta+0.06],'k','LineWidth',0.5);
+                    elseif (CD(i1,4)) < 0 && (CD(i1,5) > 0)
+                        plot([xn1-0.04, xn1-0.04],[ymedio_asta-0.06, ymedio_asta+0.06],'k','LineWidth',0.5);
+                        plot([xn1+0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta-0.06, ymedio_asta-0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta+0.06, ymedio_asta+0.02],'k','LineWidth',0.5);
+                    elseif CD(i1,4) == CD(i1,5)
+                        plot([xn1-0.04, xn1-0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1+0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta-0.02, ymedio_asta-0.02],'k','LineWidth',0.5);
+                        plot([xn1-0.04, xn1+0.04],[ymedio_asta+0.02, ymedio_asta+0.02],'k','LineWidth',0.5);
+                    end
+                end
+            end
         end
+    end
+    
+    %% PLOT VINCOLI INTERNI
+    for i1 = 1:size(MS,1)
+        % identificazione tipo di vincolo
+        
     end
 end

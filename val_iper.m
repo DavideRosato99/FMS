@@ -10,7 +10,6 @@ function [R] = val_iper(coeff0,coeffIPER,coeffCOMPL,n_aste)
             end
         end
     end
-    format rat
     % controllo che tutte le ipotetiche R siano uguali
     valore = R_vec(1);
     for i = 2:size(R_vec,1)

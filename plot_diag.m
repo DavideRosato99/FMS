@@ -61,10 +61,10 @@ function plot_diag(coeff,NODI,ASTE,str)
             % inizializzazione incognita di parametrizzazione x
             x = 0:L/100:L;
             % coefficienti
-            c0 = round(coeff(i2,i1,1),5);
-            c1 = round(coeff(i2,i1,2),5);
-            c2 = round(coeff(i2,i1,3),5);
-            c3 = round(coeff(i2,i1,4),5);
+            c0 = coeff(i2,i1,1);
+            c1 = coeff(i2,i1,2);
+            c2 = coeff(i2,i1,3);
+            c3 = coeff(i2,i1,4);
             % funzioni per il calcolo dei valori agli estremi
             val1 = c0;
             val2 = (c0+c1*L+c2*L^2+c3*L^3);

@@ -7,57 +7,93 @@ format long e;
 %% INSERISCI I DATI QUI
 % devono essere in ordine
 % NODI % [nodo,x,y]
-n_nodi = 4;
+n_nodi = 16;
 NODI = ...
     [1,0,0
-    2,0,1
-    3,0,1
-    4,1,1];
+    2,1,0
+    3,1,0
+    4,3,0
+    5,3,0
+    6,4,0
+    7,4,0
+    8,4,1
+    9,4,1
+    10,3,1
+    11,3,1
+    12,2,1
+    13,1,1
+    14,1,1
+    15,3,2
+    16,3,2];
 % ASTE % devono essere in ordine
 % il tratteggio (destra o sinistra) lo decidi posizionandoti sul nodo1 e
 % "guardando" il nodo2
-n_aste = 2; % [n_asta,nodo1,nodo2,tratteggio(1:destra,2:sinistra)]
+n_aste = 10; % [n_asta,nodo1,nodo2,tratteggio(1:destra,2:sinistra)]
 ASTE = ...
     [1,1,2,1
-    2,3,4,1];
+    2,2,4,1
+    3,5,6,1
+    4,7,8,1
+    5,3,14,1
+    6,13,12,1
+    7,12,11,1
+    8,10,9,1
+    9,14,15,1
+    10,10,16,1];
 % REAZIONI A TERRA
-n_rt = 4; % [nodo,direzione]
+n_rt = 5; % [nodo,direzione]
 RT = ...
     [1,1
     1,2
-    1,3
-    4,2];
+    4,2
+    8,1
+    8,2];
 % REAZIONI A TERRA IPERSTATICA
-n_rtIPER = 1; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
-RTIPER = [4,1,1];
+n_rtIPER = 0; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
+RTIPER = [];
 % REAZIONI MASTER SLAVE
 % la numerazione dei master deve essere sempre minore di quella degli slave
 % se è presente una molla interna non mettere la relazione interna
 % maste-slave, anche se ai fini statici ci sarebbe
-n_ms = 2; % [master,slave,direzione]
+n_ms = 13; % [master,slave,direzione]
 MS = ...
     [2,3,1
-    2,3,2];
+    2,3,2
+    4,5,1
+    4,5,2
+    6,7,2
+    6,7,3
+    8,9,1
+    8,9,2
+    10,11,1
+    10,11,3
+    13,14,1
+    13,14,2
+    15,16,1];
 % CARICHI SUI NODI
-n_cc = 0; % [nodo,direzione,valore]
+n_cc = 3; % [nodo,direzione,valore]
 CC = ...
-    [];
+    [10,3,-1
+    12,2,-1
+    14,1,-1];
 % CARICHI SUI NODI IPERSTATICA
-n_ccIPER = 0; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
+n_ccIPER = 2; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
 CCIPER = ...
-    [];
+    [4,3,-1
+    5,3,1];
 % CARICHI DISTRIBUITI
-n_cd = 1; % [asta,carico distr.sul nodo 1 (controlla matrice ASTE),carico distr.....]
+n_cd = 2; % [asta,carico distr.sul nodo 1 (controlla matrice ASTE),carico distr.....]
 CD = ...
-   [2,-1,-1,0,0];
+   [2,0,0,0.5,-0.5
+   8,-1,-1,0,0];
 % VINCOLI ELASTICI A TERRA
-n_velt = 1; % [nodo,direzione,valore]
+n_velt = 0; % [nodo,direzione,valore]
 VELT = ...
-    [4,1,1];
-% VINCOLI ELASTICI INTERNI
-n_veli = 0; %[nodo1,nodo2,direzione,valore]
-VELI = ...
     [];
+% VINCOLI ELASTICI INTERNI
+n_veli = 1; %[nodo1,nodo2,direzione,valore]
+VELI = ...
+    [4,5,3,13/4];
 % CEDIMENTI VINCOLARI
 n_cedv = 0; % [nodo,direzione,valore]
 CED = ...
@@ -88,7 +124,6 @@ CD = CD_ip;
 plot_corretto(NODI,ASTE,RT,RTIPER,CC,CCIPER,CD,VELI,VELT,CED,MS);
 corretto = input('Digita 1 se è corretto, 0 se è sbagliato:\n');
 fprintf('\n\n\n');
-corretto = 1;
 if corretto == 1
     % Soluzione struttura 0
     [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n_cd,CD,VELI,VELT,CED,CCIPER);
