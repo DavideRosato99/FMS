@@ -7,47 +7,41 @@ format long e;
 %% INSERISCI I DATI QUI
 % devono essere in ordine
 % NODI % [nodo,x,y]
-n_nodi = 16;
+n_nodi = 14;
 NODI = ...
     [1,0,0
-    2,1,0
+    2,0,0
     3,1,0
-    4,3,0
-    5,3,0
-    6,4,0
-    7,4,0
-    8,4,1
-    9,4,1
-    10,3,1
-    11,3,1
-    12,2,1
-    13,1,1
-    14,1,1
-    15,3,2
-    16,3,2];
+    4,1,0
+    5,1,2
+    6,1,2
+    7,1,2
+    8,1,3
+    9,0,3
+    10,0,2
+    11,0,2
+    12,0,2
+    13,0,2
+    14,1,3];
 % ASTE % devono essere in ordine
 % il tratteggio (destra o sinistra) lo decidi posizionandoti sul nodo1 e
 % "guardando" il nodo2
-n_aste = 10; % [n_asta,nodo1,nodo2,tratteggio(1:destra,2:sinistra)]
+n_aste = 8; % [n_asta,nodo1,nodo2,tratteggio(1:destra,2:sinistra)]
 ASTE = ...
-    [1,1,2,1
-    2,2,4,1
-    3,5,6,1
-    4,7,8,1
-    5,3,14,1
-    6,13,12,1
-    7,12,11,1
-    8,10,9,1
-    9,14,15,1
-    10,10,16,1];
+    [1,1,3,1
+    2,5,4,1
+    3,7,8,1
+    4,14,9,1
+    5,9,10,1
+    6,11,6,1
+    7,3,12,1
+    8,2,13,1];
 % REAZIONI A TERRA
-n_rt = 5; % [nodo,direzione]
+n_rt = 3; % [nodo,direzione]
 RT = ...
-    [1,1
-    1,2
-    4,2
-    8,1
-    8,2];
+    [8,1
+    8,2
+    10,1];
 % REAZIONI A TERRA IPERSTATICA
 n_rtIPER = 0; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
 RTIPER = [];
@@ -55,45 +49,46 @@ RTIPER = [];
 % la numerazione dei master deve essere sempre minore di quella degli slave
 % se è presente una molla interna non mettere la relazione interna
 % maste-slave, anche se ai fini statici ci sarebbe
-n_ms = 13; % [master,slave,direzione]
+n_ms = 15; % [master,slave,direzione]
 MS = ...
-    [2,3,1
-    2,3,2
-    4,5,1
-    4,5,2
-    6,7,2
-    6,7,3
-    8,9,1
-    8,9,2
+    [1,2,1
+    3,4,2
+    3,4,3
+    5,6,1
+    5,6,2
+    5,7,1
+    5,7,2
+    8,14,1
+    8,14,2
     10,11,1
-    10,11,3
-    13,14,1
-    13,14,2
-    15,16,1];
+    10,11,2
+    10,12,1
+    10,12,2
+    10,13,1
+    10,13,2];
 % CARICHI SUI NODI
-n_cc = 3; % [nodo,direzione,valore]
+n_cc = 1; % [nodo,direzione,valore]
 CC = ...
-    [10,3,-1
-    12,2,-1
-    14,1,-1];
+    [3,3,-1];
 % CARICHI SUI NODI IPERSTATICA
 n_ccIPER = 2; % [nodo,direzione,valore] come valore metti SEMPRE +1 o -1
 CCIPER = ...
-    [4,3,-1
-    5,3,1];
+    [8,3,-1
+    14,3,1];
 % CARICHI DISTRIBUITI
-n_cd = 2; % [asta,carico distr.sul nodo 1 (controlla matrice ASTE),carico distr.....]
+n_cd = 3; % [asta,carico distr.sul nodo 1 (controlla matrice ASTE),carico distr.....]
 CD = ...
-   [2,0,0,0.5,-0.5
-   8,-1,-1,0,0];
+   [1,0,0,-1,-1
+   4,1,1,0.5,-0.5
+   5,-1,-1,0,0];
 % VINCOLI ELASTICI A TERRA
 n_velt = 0; % [nodo,direzione,valore]
 VELT = ...
     [];
 % VINCOLI ELASTICI INTERNI
-n_veli = 1; %[nodo1,nodo2,direzione,valore]
+n_veli = 0; %[nodo1,nodo2,direzione,valore]
 VELI = ...
-    [4,5,3,13/4];
+    [];
 % CEDIMENTI VINCOLARI
 n_cedv = 0; % [nodo,direzione,valore]
 CED = ...

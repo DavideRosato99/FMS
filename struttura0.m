@@ -26,7 +26,6 @@ function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n
     for i = 1:size(MS,1)
         igl(MS(i,2),MS(i,3)) = MS(i,1);
     end
-
     %% conteggio gradi di libertà
     n_gdl = 0;
     for i1 = 1:n_nodi
@@ -40,7 +39,6 @@ function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n
             end
         end
     end
-
     %% creazione matrice dei carichi esterni sui nodi
     car_con = zeros(n_gdl,1);
     for i1 = 1:size(CC,1)
@@ -87,7 +85,7 @@ function [coeff0] = struttura0(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n_cc,CC,n
             end
         end
     end
-%     %% Correzioni vincoli elastici
+    %% Correzioni vincoli elastici
 %     if cond_veli == 0
 %         [KstfG,F_extG] = vincoli_elastici(KstfG,F_extG,VELT,VELI,igl);
 %     end

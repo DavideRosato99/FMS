@@ -22,10 +22,10 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
         cond = 0;
     else
         % provo con i numeri interi
-        for i1 = 1:300
+        for i1 = 1:1000
             ip_num = val*i1;
             controllo = abs(ip_num - round(ip_num));
-            if controllo < 1e-4
+            if controllo < 1e-3
                 num = round(ip_num);
                 den = i1;
                 rad = 0;
@@ -35,10 +35,10 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
         end
         % provo con le radici
         for i1 = 1:length(prob_rad)
-            for i2 = 1:100
+            for i2 = 1:1000
                 ip_num = val*i2/sqrt(prob_rad(i1));
                 controllo = abs(ip_num - round(ip_num));
-                if controllo < 1e-4
+                if controllo < 1e-3
                     num = round(ip_num);
                     den = i2;
                     rad = prob_rad(i1);

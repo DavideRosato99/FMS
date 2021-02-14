@@ -54,6 +54,15 @@ function [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n
             end
         end
     end
+    if size(VELI,1) ~= 0
+        if size(CCIPER,1) == 0
+            for i1 = 1:size(MS,1)
+                if ((MS(i1,1) == VELI(1)) && (MS(i1,2) == VELI(2)) && (MS(i1,3) == VELI(3))) || ((MS(i1,1) == VELI(2)) && (MS(i1,2) == VELI(1))  && (MS(i1,3) == VELI(3)))
+                    MS(i1,:) = [0,0,0];
+                end
+            end
+        end
+    end
     %% controllo vincoli elastici esterni
     if size(VELT,1) ~= 0 % se ci sono molle a terra
         % tolgo reazione vincolare a terra se in corrispondenza c'è la
@@ -84,7 +93,6 @@ function [coeffCOMPL] = strutturaCOMPL(n_nodi,NODI,n_aste,ASTE,n_rt,RT,n_ms,MS,n
             igl(MS(i,2),MS(i,3)) = MS(i,1);
         end
     end
-
     %% conteggio gradi di libertà
     n_gdl = 0;
     for i1 = 1:n_nodi
