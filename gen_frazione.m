@@ -53,6 +53,10 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
                     i4 = i2;
                 end
             end
+            if (i3 == 10000) || (i4 == 10000)
+                conditio = 1;
+                error('Non è stato possibile trovare un numeratore o denominatore');
+            end
         end
     end
 end
