@@ -21,29 +21,36 @@ function [num,den,rad,cond] = gen_frazione(val,NODI,ASTE)
         rad = 0;
         cond = 0;
     else
-        % provo con i numeri interi
-        for i1 = 1:1000
-            ip_num = val*i1;
-            controllo = abs(ip_num - round(ip_num));
-            if controllo < 1e-3
-                num = round(ip_num);
-                den = i1;
-                rad = 0;
-                cond = 0;
-                return;
-            end
-        end
-        % provo con le radici
-        for i1 = 1:length(prob_rad)
-            for i2 = 1:1000
-                ip_num = val*i2/sqrt(prob_rad(i1));
+        conditio = 0;
+        i3 = 1;
+        i4 = 1;
+        while conditio == 0;
+            % provo con i numeri interi
+            for i1 = i3:i3+10
+                ip_num = val*i1;
                 controllo = abs(ip_num - round(ip_num));
                 if controllo < 1e-3
                     num = round(ip_num);
-                    den = i2;
-                    rad = prob_rad(i1);
-                    cond = 1;
+                    den = i1;
+                    rad = 0;
+                    cond = 0;
                     return;
+                end
+                i3 = i1;
+            end
+            % provo con le radici
+            for i1 = 1:length(prob_rad)
+                for i2 = i4:i4+10
+                    ip_num = val*i2/sqrt(prob_rad(i1));
+                    controllo = abs(ip_num - round(ip_num));
+                    if controllo < 1e-3
+                        num = round(ip_num);
+                        den = i2;
+                        rad = prob_rad(i1);
+                        cond = 1;
+                        return;
+                    end
+                    i4 = i2;
                 end
             end
         end
